@@ -1,4 +1,4 @@
-# **LAAS_LDMRS-PTU**
+# **LDMRS-PTU_LAAS**
 A ROS driver for 3D scanning based on SICK LD-MRS and FLIR PTU-46
 
 ## Prerequisites
