@@ -1,0 +1,61 @@
+#ifndef IDL_PLATINE_STRUCT
+#define IDL_PLATINE_STRUCT
+
+#include "or/time/time.idl"
+
+
+module platine {
+
+
+  
+  enum ptu_unit {
+    DEG,
+    RAD,
+    STEP
+  };
+
+  enum ptu_axis{
+    PAN,
+    TILT
+  };
+
+  enum save_types {
+    DISABLED,
+    ENABLED
+  };
+
+  enum baudrate_profile {
+    BAUDRATE_DEFAULT,
+    BAUDRATE_HIGHEST
+  };
+ 
+  struct axis_state {
+    double speed;
+    double base_speed;
+    double acceleration;
+    double position;
+    double min_position;
+    double max_position;
+    double resolution;
+  };
+
+  struct ptu_state{
+    ptu_unit unit;
+    ptu_unit unit_res;
+    axis_state tilt_state;
+    axis_state pan_state;
+  };
+  
+  struct timed_pos{
+    long id;
+    or::time::ts time_stamp;
+
+    ptu_axis axis;
+    double value;
+    ptu_unit unit;
+  };
+  
+};
+
+#endif /* IDL_PLATINE_STRUCT */
+

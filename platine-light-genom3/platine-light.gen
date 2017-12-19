@@ -1,0 +1,174 @@
+
+#pragma require "openrobots-idl >= 1.0"
+
+
+#include "platineStruct.idl"
+
+component platine_light {
+  version	"0.1";
+  email		"openrobots@laas.fr";
+  lang		"c";
+  require	"genom3 >= 2.99.20";
+
+
+
+  exception e_file{ string<256> what; };
+  exception e_ptu{ string <256> what; };
+  exception e_mem;
+
+
+  port out platine::timed_pos ptu_position;
+  port out platine::ptu_state ptu_state;
+
+  task pos_pub;
+  task cmd;
+
+  native platine_struct;
+
+  ids {
+      boolean monitor;
+      platine_struct ptu;
+
+      platine::save_types save_type;
+      string<256> save_file;
+  };
+
+
+  /* --- init commands ---------------------------------------------------------- */
+
+  activity open(
+    in string<64> device = "/dev/ttyUSB0"	: "Serial port",
+    in platine::baudrate_profile baudrate =  /*BAUDRATE_HIGHEST*/	: "baudrate profile") {
+    doc		"Opens connection PTU unit";
+    task cmd;
+
+    codel<start> 
+    		 platine_open(in device, in baudrate,inout ::ids) 
+		 yield update;
+
+    codel<update>
+	    platine_update_state_poster(inout ::ids,port out ptu_state)
+	    yield ether;
+
+    interrupts open,monitor_position;
+    throw e_ptu;
+  };
+
+  function close(){
+	   doc "Closes connection to PTU unit";
+	   codel platine_close(inout ::ids);
+	   throw e_ptu;
+	   interrupts open,monitor_position;
+ };
+ 
+ activity set_baudrate(
+    in string<64> device = "/dev/ttyUSB0" : "Serial port",
+    in platine::baudrate_profile current_baudrate = /*BAUDRATE_DEFAULT*/ : "current baudrate profile",
+    in platine::baudrate_profile new_baudrate = /*BAUDRATE_HIGHEST*/ : "new baudrate profile"){
+    
+    doc "Set baudrate of platine.";
+    task cmd;
+
+    codel<start>
+	platine_set_baudrate(in device,in current_baudrate, in new_baudrate,inout ::ids)
+	yield ether;
+
+    throw e_ptu;
+
+    interrupts open,monitor_position;
+
+ };
+
+
+  /* ---monitor position  ----------------------------------------------------------- */
+
+  activity monitor_position(
+    in platine::ptu_axis axis = /*TILT*/ : "Monitor pan or tilt position",
+    in platine::ptu_unit unit = /*RAD*/ : "Monitor value unit") {
+    doc		"Start monitoring position (only one axis).";
+    task	pos_pub;
+
+    codel<start>
+      platine_start_monitor_position(in axis,in unit,inout ::ids,port out ptu_position)
+      yield get;
+
+    codel<get>
+      platine_get_position(in axis,in unit,inout ::ids,port out ptu_position)
+      yield get,ether;
+
+    throw e_file;
+    interrupts monitor_position;
+  };
+
+  function stop_monitor_position() {
+    doc		"Stops monitoring of position";
+    
+    codel platine_stop_monitor_position(out monitor);
+    
+    throw e_ptu;
+  };
+
+  /* --- setters for platine  ----------------------------------------------------------- */
+
+
+ activity goto_position(
+    in platine::ptu_axis axis = /*TILT*/ : "pan or tilt axis",
+    in double value = 0 : "value in degrees or radians",
+    in platine::ptu_unit unit = /*RAD*/ : "unit DEG (degrees), RAD (radians) or STEP (platine atomic steps)" ) {
+    doc		"Goto position (only one axis) using current speed profile for this axis.";
+    task	cmd;
+
+    codel<start>
+      platine_goto_position(in axis,in value,in unit,inout ::ids)
+      yield ether;
+
+    throw e_ptu;
+    interrupts goto_position;
+  };
+
+  activity set_speed_profile(
+  	   in platine::ptu_axis axis = /*TILT*/ : "pan or tilt axis",
+	   in double speed = 1000 : "Target speed",
+	   in double base_speed = 1000 : "Base speed (no acceleration up to this speed)",
+	   in double acceleration = 1000 : "Acceleration for reaching speeds > base_speed",
+	   in platine::ptu_unit unit = /*STEP*/ : "unit DEG (degrees), RAD (radians) or STEP (platine atomic steps"){
+	   
+	   doc "Set speed profile for specified axis.";
+	   task cmd;
+
+	   codel<start>
+		platine_set_speed_profile(in axis,in speed,in base_speed,in acceleration,in unit,inout ::ids)
+		yield update;
+
+	   codel<update>
+	    platine_update_state_poster(inout ::ids,port out ptu_state)
+	    yield ether;
+
+	throw e_ptu;
+	interrupts goto_position;
+   };
+
+
+  /* --- optional scan saving to files ----------------------------------------------------------- */
+
+  attribute get_savefile(out save_file){
+    doc		"Get the save file name (path).";
+  };
+
+  attribute get_savetype(out save_type){
+   doc "Determines if and how scans will be saved to files.";
+  };
+
+  attribute set_savefile(
+    in save_file = "ptu" : "File name (path) of save file") {
+    doc		"Define the save file name (path).";
+    validate set_logfile(local in save_file);
+    throw e_file;
+  };
+
+   attribute set_savetype(
+  	    in save_type = /*ENABLED*/ : "Determines if scans will be saved to files."){
+	    doc "Save type : DISABLED / ENABLED ";
+    };
+
+};

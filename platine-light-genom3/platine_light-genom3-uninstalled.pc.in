@@ -1,0 +1,11 @@
+# pkg-config file for uninstalled platine_light interface and codels library
+#
+prefix=@abs_top_builddir@
+libdir=${prefix}/codels
+includedir=${prefix}/codels
+
+Name: platine_light-genom3
+Description: platine_light interface and codels library
+Version: @PACKAGE_VERSION@
+Requires: openrobots-idl >= 1.0, genom3 >= 2.99.20
+Libs: ${libdir}/libplatine_light_codels.la

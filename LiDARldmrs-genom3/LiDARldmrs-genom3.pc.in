@@ -1,0 +1,15 @@
+# pkg-config file for LiDARldmrs interface and codels library
+#
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+datarootdir=@datarootdir@
+idldir=@datadir@/idl
+
+Name: LiDARldmrs-genom3
+Description: LiDARldmrs interface and codels library
+Version: @PACKAGE_VERSION@
+Requires: genom3 >= 2.99.20
+Cflags: -I${includedir} -I${idldir}
+Libs: -L${libdir} -lLiDARldmrs_codels

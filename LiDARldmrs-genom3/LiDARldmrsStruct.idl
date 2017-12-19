@@ -1,0 +1,60 @@
+
+#ifndef IDL_LIDARLDMRS_STRUCT
+#define IDL_LIDARLDMRS_STRUCT
+
+module LiDARldmrs {
+
+  enum scan_freqs{ /* in 1/256 Hz */
+    LOW,         /* 12.5 Hz */
+    MEDIUM,      /* 25.0 Hz */
+    HIGH         /* 50.0 Hz */
+  };
+
+  struct ldmrsStatus {
+    string     ip;
+    string     firmware_version;
+    string     fpga_version;
+    string     serial;
+    string     port;
+    long       scanFreq;
+    double     start_angle;
+    float      end_angle;
+    float      temperature;
+  };
+
+  /**
+   * Human readable measure point From sickldmrs.h
+   */
+    struct sickldmrs_point {
+  	long layer;
+  	long echo;
+  	long flags;
+  	float horizontal_angle;
+  	float radial_distance;
+  	float pulse_width;
+  } ;
+
+  /**
+   * Scan data frames in human readable form. From sickldmrs.h
+   */
+    struct sickldmrsScan {
+  	long scan_number;
+  	long scanner_status;
+  	long sync_phase_offset;
+  	long angle_ticks_per_rotation;
+  	float start_angle;
+  	float end_angle;
+  	long scan_points;
+  	float mount_yaw;
+  	float mount_pitch;
+  	float mount_roll;
+  	float mount_x;
+  	float mount_y;
+  	float mount_z;
+  	long flags;
+  	sequence<sickldmrs_point>  points;
+  };
+
+};
+
+#endif /* IDL_LIDARLDMRS_STRUCT */

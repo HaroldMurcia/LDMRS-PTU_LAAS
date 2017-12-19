@@ -1,0 +1,14 @@
+# pkg-config file for platine_light interface and codels library
+#
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+idldir=@datadir@/idl
+
+Name: platine_light-genom3
+Description: platine_light interface and codels library
+Version: @PACKAGE_VERSION@
+Requires: openrobots-idl >= 1.0, genom3 >= 2.99.20
+Cflags: -I${includedir} -I${idldir}
+Libs: -L${libdir} -lplatine_light_codels

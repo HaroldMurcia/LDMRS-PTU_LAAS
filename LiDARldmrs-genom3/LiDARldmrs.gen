@@ -1,0 +1,75 @@
+#include "LiDARldmrsStruct.idl"
+
+component LiDARldmrs {
+  version	"0.1";
+  email		"openrobots@laas.fr";
+  lang		"c";
+  require	"genom3 >= 2.99.20";
+
+  native sickldmrs_device;
+  port out LiDARldmrs::sickldmrsScan sickScanner;
+
+  task scan_pub;
+
+  ids {
+    sickldmrs_device LDMRS;
+    LiDARldmrs::ldmrsStatus devStatus;
+    string<512> sscan_pubave_file;
+  };
+
+
+  /* --- init commands ---------------------------------------------------------- */
+
+  activity open(in string<64> ip =	/*"192.168.0.1"*/	:"IP Address", in string port = /*"12002"*/ :"IP Port"
+    ,in LiDARldmrs::scan_freqs scan_freq = /*MEDIUM*/	: "Valid scan freq.")
+  {
+    doc		"Opens connection to SICK LDMRS scanner";
+    task	scan_pub;
+    codel<start>
+      ldmrs_open(in ip, in port, inout ::ids)
+      yield config;
+
+    codel<config>
+      ldmrs_conf(in scan_freq, inout ::ids)
+      yield ether;
+  };
+
+  activity quit()
+  {
+    doc		"Closes connection to SICK LDMRS scanner";
+    task	scan_pub;
+    codel<start>
+      ldmrs_quit(inout ::ids)
+      yield ether;
+  };
+
+  function close(){
+	   doc "Closes connection to SICK LDMRS scanner";
+	   codel ldmrs_close(inout ::ids);
+
+     interrupts open, startAcquisition;
+  };
+
+
+  /* ---scan  ----------------------------------------------------------- */
+  activity startAcquisition()
+  {
+    doc		"Start acquisition of data. Scans will be acquired and published.";
+    task	scan_pub;
+
+    codel<start>
+      start_scanning(inout ::ids)
+      yield scan;
+
+    codel<scan>
+      get_data(port out sickScanner, inout ::ids)
+      yield stop;
+
+    codel<stop>
+      stop_scanning(inout ::ids)
+      yield ether;
+
+    interrupts startAcquisition;
+  };
+
+};

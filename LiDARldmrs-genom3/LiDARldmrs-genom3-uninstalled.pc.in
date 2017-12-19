@@ -1,0 +1,11 @@
+# pkg-config file for uninstalled LiDARldmrs interface and codels library
+#
+prefix=@abs_top_builddir@
+libdir=${prefix}/codels
+includedir=${prefix}/codels
+
+Name: LiDARldmrs-genom3
+Description: LiDARldmrs interface and codels library
+Version: @PACKAGE_VERSION@
+Requires: genom3 >= 2.99.20
+Libs: ${libdir}/libLiDARldmrs_codels.la
