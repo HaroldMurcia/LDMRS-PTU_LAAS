@@ -10,14 +10,14 @@
 Created on Thu Sep 28 16:01:59 2017
 This is the main file for acquisition tasks. The main loop creates the rospy node scan3D_client_py
 and needs in execution the nodes_ platine_light-ros and LiDARldmrs-ros and/OR rmp440-ros and/OR joystick-ros.
-There is a function of help -h, and a function main_check which try to to guide the use of the adcquisition.
+There is a function of help -h, and a function main_check which try to to guide the use the adcquisition tool.
 For a simple uses, run: >> python sickScan.py min_angle max_angle interes_angle sigma
     where:
     min_angle is the minimum tilt angle in degrees
-    min_angle is the maximum tilt angle in degrees
+    max_angle is the maximum tilt angle in degrees
     interes_angle is the angle where the system will scann more points
-    sigma is a indicator of resolutio between [0 and 1]. USE 0.1 by default
-    * At the end of its execution the program must create a txt file with the initial name parameters and the
+    sigma is an indicator of resolution between [0 and 1]. USE 0.1 by default
+    * At the end of its execution, the program must creates a .txt file with the initial name parameters and the
     adcquired information on the folder: data
 For help run: >> python sickScan.py -h
 ** Speed of the PTU can be changed on code line 206 to 213 of file scan3D.py

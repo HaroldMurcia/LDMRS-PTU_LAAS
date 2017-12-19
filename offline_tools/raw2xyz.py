@@ -11,8 +11,9 @@ Created on Tue Oct 10 18:13:58 2017
 This file include the calibrated parameters to calculates the local XYZ positions of the point clouds.
 TODO: Add the position of the rover to calculate the absolute point cloud
 
-To use it, execute: >> python raw2txt.py file_path
-input_file must be contained in a forder named .../data/raw/
+To use it, execute: >> python raw2xyz.py file_path
+input_file must be contained in a forder named .../data/raw/*
+    *be sure path .../data/raw/ exists.
 
 @author: haroldfmurcia
 """
@@ -57,7 +58,7 @@ if __name__ == "__main__":
     X=np.zeros([data.beta.shape[0],1])
     Y=np.zeros([data.beta.shape[0],1])
     Z=np.zeros([data.beta.shape[0],1])
-    # Parameters
+    # Parameters obtained from a caliration process
     # Intrinsic
     L1z         =   0.100578984193110;
     L2x         =  -0.023760000000000;

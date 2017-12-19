@@ -83,7 +83,7 @@ A ROS driver for 3D scanning based on SICK LD-MRS and FLIR PTU-46
 ```
 % python sickScan.py -45 5 0 0.1
 ```
-Then follow the steps, adding a name for the ouput file and a description of the experiment. When it finished, a .txt file must be automatically generated with the indicated name + the date
+Then follow the steps, adding a name for the ouput file (+ enter) and a description of the experiment ( + enter). When it finished, a .txt file must be automatically generated with the indicated name + the date in the folder .../data/raw.
 
 ## offline tools
 * Converting the raw data
@@ -98,6 +98,10 @@ Then follow the steps, adding a name for the ouput file and a description of the
 * Calibration files: once you have the calibration data you can uses the calbration files with MATLAB by changing the path of your input file
 ```
 % data = load('path_of_your_calibration_data_file.txt');
+```
+or
+```
+% data = load path_of_your_calibration_data_file.mat ;
 ```
 
 ## Built With

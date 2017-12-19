@@ -20,9 +20,6 @@ import pandas as pd
 
 
 if __name__ == "__main__":
-    #file_input  = sys.argv[1]
-    #len_fi = len(file_input)
-    #file_output = sys.argv[0:len_fi - 4] + ".txt"
     path   = sys.argv[1]
     path_s = path.split("/")
     L = len(path_s)
