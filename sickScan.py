@@ -32,7 +32,7 @@ import numpy as np
 from subprocess import check_output
 
 
-path_data = os.getcwd() + "/data"
+path_data = os.getcwd() + "/data/raw"
 path_bin  = "/home/"+getpass.getuser()+"/ROS_GenoM3/bin"
 dev = '/dev/tty_PTU'
 ip_address = '192.168.0.2'
@@ -195,11 +195,11 @@ def saveCloud_txt(fileName):
 
 def main_check():
     if sys.argv[1] == "-h" or sys.argv[1] == "--h":
-        print "use: python main.py Tilt_min Tilt_max Tilt_step"
+        print "use: python sickScan.py Tilt_min Tilt_max Tilt_int sigma"
         print "\t Tilt_min:  Minimun angle in deg for TILT 3Dscan"
         print "\t Tilt_max:  Minimun angle in deg for TILT 3Dscan"
         print "\t Tilt_int:  Interest region to scan in deg"
-	print "\t Tilt_res:  Scan resolution from 0 to 1.0.  1.0 = Full resolution"
+        print "\t sigma:  Scan index for resolution from 0 to 1.0=Full_resolution.  put 0.1 for default"
         sys.exit()
     if len(sys.argv) !=5:
         print ("Unspecified arguments.\nTry with: see -h")

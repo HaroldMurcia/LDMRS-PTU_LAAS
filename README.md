@@ -1,12 +1,12 @@
-# LAAS_LDMRS-PTU
+# **LAAS_LDMRS-PTU**
 A ROS driver for 3D scanning based on SICK LD-MRS and FLIR PTU-46
 
 ## Prerequisites
 * Python
-    *rospy, psutil, pickle, pandas
+    * rospy, psutil, pickle, pandas
 * C
 * ROS
-* optional *genom3*
+* optional: *[GenoM3](https://www.openrobots.org/wiki/genom3)*
 
 ## Getting Started
 * Install [RobotoPKG](http://robotpkg.openrobots.org/install.html)
@@ -49,14 +49,20 @@ A ROS driver for 3D scanning based on SICK LD-MRS and FLIR PTU-46
 % make
 % make install
 ```
-* Edit the file main.py if you need to change parameters e.g: ip address, port, dev_name, output paths, etc
+* Edit the file sickScan.py if you need to change parameters e.g: ip address, port, dev_name, output paths, etc
 
 ## Running the tests
 * Launch roscore
-* In bin folder of your project run the modules:
+* In bin folder <i class="icon-folder-open"></i> of YOUR_INSTALL_PATH run the modules:
 ```
     % ./platine_light
     % ./LiDARldmrs
+```
+* ROS actions, ROS services and ROS topics
+```
+% rosnode list
+% rosaction list
+% rostopic list
 ```
 * Launch the rover nodes ( *see bash_functions file for more information* )
 * If you nees to include the rover position to the point cloud
@@ -69,7 +75,7 @@ A ROS driver for 3D scanning based on SICK LD-MRS and FLIR PTU-46
     % rosaction call /rmp440/JoystickOn {}
 ```
 
-* In **LAAS_LDMRS-PTU** folder:
+* In **LAAS_LDMRS-PTU** folder <i class="icon-folder-open"></i>:
 ```
 % python sickScan.py -h
 ```
@@ -81,9 +87,9 @@ Then follow the steps, adding a name for the ouput file and a description of the
 
 ## offline tools
 * Converting the raw data
-    * To convert the generated file to XYZ new file you must use the file raw2txt.py located on offline_tools folder
+    * To convert the generated file to XYZ new file you must use the file raw2xyz.py located on offline_tools folder  <i class="icon-folder-open"></i>
 ```
-% python raw2txt.py input_file_path
+% python raw2xyz.py input_file_path
 ```
 * Converting to xyz .log data *check the data column-separator, column-number and change if is necessary*
 ```
